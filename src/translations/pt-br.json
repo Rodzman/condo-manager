@@ -1,0 +1,38 @@
+{
+  "COMMON": {
+    "SAVE": "Salvar",
+    "CANCEL": "Cancelar",
+    "DELETE": "Excluir",
+    "EDIT": "Editar",
+    "ITEMS_COUNT": "{count, plural, =0 {Nenhum item} one {# item} other {# itens}}",
+    "WELCOME_USER": "Bem-vindo, {name}!"
+  },
+  "AUTH": {
+    "LOGIN": "Entrar",
+    "LOGOUT": "Sair",
+    "EMAIL": "E-mail",
+    "PASSWORD": "Senha",
+    "LAST_LOGIN": "Último acesso: {date, date, medium} {date, time, short}"
+  },
+  "DASHBOARD": {
+    "TITLE": "Painel",
+    "WELCOME": "Bem-vindo ao Gerenciador de Condomínio",
+    "BALANCE": "Saldo: {amount, number, currency}"
+  },
+  "UNITS": {
+    "TITLE": "Gestão de Unidades",
+    "LOADING": "Carregando...",
+    "LOAD_ERROR": "Falha ao carregar as unidades.",
+    "ERRORS": {
+      "CREATE_FAIL": "Falha ao cadastrar unidade",
+      "UPDATE_FAIL": "Falha ao atualizar unidade",
+      "DELETE_FAIL": "Falha ao excluir unidade",
+      "ADD_RESIDENT_FAIL": "Falha ao adicionar morador",
+      "UPDATE_RESIDENT_FAIL": "Falha ao atualizar morador",
+      "DELETE_RESIDENT_FAIL": "Falha ao excluir morador",
+      "ADD_VEHICLE_FAIL": "Falha ao adicionar veículo",
+      "UPDATE_VEHICLE_FAIL": "Falha ao atualizar veículo",
+      "DELETE_VEHICLE_FAIL": "Falha ao excluir veículo"
+    }
+  }
+}

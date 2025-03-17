@@ -1,0 +1,38 @@
+{
+  "COMMON": {
+    "SAVE": "Save",
+    "CANCEL": "Cancel",
+    "DELETE": "Delete",
+    "EDIT": "Edit",
+    "ITEMS_COUNT": "{count, plural, =0 {No items} one {# item} other {# items}}",
+    "WELCOME_USER": "Welcome, {name}!"
+  },
+  "AUTH": {
+    "LOGIN": "Login",
+    "LOGOUT": "Logout",
+    "EMAIL": "Email",
+    "PASSWORD": "Password",
+    "LAST_LOGIN": "Last login: {date, date, medium} {date, time, short}"
+  },
+  "DASHBOARD": {
+    "TITLE": "Dashboard",
+    "WELCOME": "Welcome to Condo Manager",
+    "BALANCE": "Balance: {amount, number, currency}"
+  },
+  "UNITS": {
+    "TITLE": "Units Management",
+    "LOADING": "Loading...",
+    "LOAD_ERROR": "Failed to load units.",
+    "ERRORS": {
+      "CREATE_FAIL": "Failed to create unit",
+      "UPDATE_FAIL": "Failed to update unit",
+      "DELETE_FAIL": "Failed to delete unit",
+      "ADD_RESIDENT_FAIL": "Failed to add resident",
+      "UPDATE_RESIDENT_FAIL": "Failed to update resident",
+      "DELETE_RESIDENT_FAIL": "Failed to delete resident",
+      "ADD_VEHICLE_FAIL": "Failed to add vehicle",
+      "UPDATE_VEHICLE_FAIL": "Failed to update vehicle",
+      "DELETE_VEHICLE_FAIL": "Failed to delete vehicle"
+    }
+  }
+}

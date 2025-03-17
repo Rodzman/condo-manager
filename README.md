@@ -1,29 +1,110 @@
-# Create T3 App
+# Condo Manager
 
-This is a [T3 Stack](https://create.t3.gg/) project bootstrapped with `create-t3-app`.
+By Rodrigo Pascoalino
 
-## What's next? How do I make an app with this?
+A comprehensive property management system for condominiums built with the T3 Stack.
 
-We try to keep this project as simple as possible, so you can start with just the scaffolding we set up for you, and add additional things later when they become necessary.
+## Features
 
-If you are not familiar with the different technologies used in this project, please refer to the respective docs. If you still are in the wind, please join our [Discord](https://t3.gg/discord) and ask for help.
+- 🏢 Property Management
+- 👥 Resident Management
+- 🚗 Vehicle Control
+- 🔐 Secure Authentication
+- 📱 Responsive Design
+- 🌐 Multi-language Support
 
-- [Next.js](https://nextjs.org)
-- [NextAuth.js](https://next-auth.js.org)
-- [Prisma](https://prisma.io)
-- [Drizzle](https://orm.drizzle.team)
-- [Tailwind CSS](https://tailwindcss.com)
-- [tRPC](https://trpc.io)
+## Tech Stack
 
-## Learn More
+- [Next.js 15](https://nextjs.org/) - React Framework
+- [Auth.js](https://authjs.dev/) - Authentication
+- [Prisma](https://prisma.io) - Database ORM
+- [Tailwind CSS](https://tailwindcss.com) - Styling
+- [TypeScript](https://typescriptlang.org) - Type Safety
+- [PostgreSQL](https://postgresql.org) - Database
 
-To learn more about the [T3 Stack](https://create.t3.gg/), take a look at the following resources:
+## Prerequisites
 
-- [Documentation](https://create.t3.gg/)
-- [Learn the T3 Stack](https://create.t3.gg/en/faq#what-learning-resources-are-currently-available) — Check out these awesome tutorials
+- Node.js 22+
+- PostgreSQL 16+
+- pnpm
 
-You can check out the [create-t3-app GitHub repository](https://github.com/t3-oss/create-t3-app) — your feedback and contributions are welcome!
+## Getting Started
 
-## How do I deploy this?
+1. Clone the repository:
 
-Follow our deployment guides for [Vercel](https://create.t3.gg/en/deployment/vercel), [Netlify](https://create.t3.gg/en/deployment/netlify) and [Docker](https://create.t3.gg/en/deployment/docker) for more information.
+   ```bash
+   git clone https://github.com/yourusername/condo-manager.git
+   cd condo-manager
+   ```
+
+2. Install dependencies:
+
+   ```bash
+   pnpm install
+   ```
+
+3. Set up your environment variables:
+
+   ```bash
+   cp .env.example .env
+   ```
+
+   Then edit `.env` with your configuration.
+
+4. Set up the database:
+
+   ```bash
+   ./start-database.sh
+   pnpm prisma migrate dev
+   ```
+
+5. Start the development server:
+   ```bash
+   pnpm dev
+   ```
+
+Visit `http://localhost:3000` to see the application.
+
+## Project Structure
+
+```
+src/
+├── app/           # Next.js App Router pages and API routes
+├── components/    # Reusable UI components
+├── lib/          # Utility libraries and configurations
+├── providers/    # React context providers
+├── schemas/      # Validation schemas
+├── services/     # Business logic and external services
+├── styles/       # Global styles and Tailwind CSS
+├── translations/ # i18n translations
+├── types/        # TypeScript type definitions
+└── utils/        # Helper functions
+```
+
+## Development Guidelines
+
+- Follow TypeScript best practices
+- Write tests for new features
+- Use conventional commits
+- Keep components small and focused
+- Follow the established folder structure
+
+## Available Scripts
+
+- `pnpm dev` - Start development server
+- `pnpm build` - Build for production
+- `pnpm start` - Start production server
+- `pnpm lint` - Run ESLint
+- `pnpm format` - Format code with Prettier
+- `pnpm test` - Run tests
+
+## Contributing
+
+1. Create a feature branch
+2. Commit your changes
+3. Push to the branch
+4. Open a pull request
+
+## License
+
+MIT License - see LICENSE for details
