@@ -1,10 +1,9 @@
-export default function Comunicacao() {
+export default function ComunicationPage() {
   return (
     <div>
-      <h1 className="text-3xl font-bold mb-4">Comunicação Interna</h1>
+      <h1 className="mb-4 text-3xl font-bold">Comunicação Interna</h1>
       <p>Gerencie avisos, mensagens e reclamações aqui.</p>
       {/* Adicione mais conteúdo e funcionalidades aqui */}
     </div>
-  )
+  );
 }
-

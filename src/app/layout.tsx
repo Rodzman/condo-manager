@@ -1,12 +1,22 @@
-import "@/styles/globals.css";
+import type React from "react";
 import { Inter } from "next/font/google";
-import Header from "../components/Header";
+import { ThemeProvider } from "@/providers/themeProvider";
+import "@/styles/globals.css";
+import type { Metadata, Viewport } from "next";
 
 const inter = Inter({ subsets: ["latin"] });
 
-export const metadata = {
-  title: "CondoManager",
-  description: "Aplicativo de Gerenciamento de Condomínios",
+export const metadata: Metadata = {
+  title: "Reserva Sapetinga",
+  description: "Condomínio de luxo em harmonia com a natureza",
+};
+
+export const viewport: Viewport = {
+  colorScheme: "light dark",
+  themeColor: [
+    { media: "(prefers-color-scheme: light)", color: "white" },
+    { media: "(prefers-color-scheme: dark)", color: "#0a0a0a" },
+  ],
 };
 
 export default function RootLayout({
@@ -15,10 +25,19 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="pt-BR">
-      <body className={inter.className}>
-        <Header />
-        <main className="container mx-auto mt-8 px-4">{children}</main>
+    <html lang="pt-BR" suppressHydrationWarning>
+      <head />
+      <body className={`${inter.className} antialiased`}>
+        <ThemeProvider
+          attribute="class"
+          defaultTheme="system"
+          enableSystem
+          disableTransitionOnChange
+          storageKey="reserva-sapetinga-theme"
+          themes={["light", "dark"]}
+        >
+          {children}
+        </ThemeProvider>
       </body>
     </html>
   );
