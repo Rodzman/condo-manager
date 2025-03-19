@@ -171,4 +171,4 @@ const enforceUserIsAdmin = t.middleware(({ ctx, next }) => {
     });
 });
 
-export const adminProcedure = t.procedure.use(enforceUserIsAdmin);
+export const adminProcedure = t.procedure.use(timingMiddleware).use(enforceUserIsAdmin);
