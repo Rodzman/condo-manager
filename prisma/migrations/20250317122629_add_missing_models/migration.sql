@@ -1,5 +1,10 @@
 -- AlterTable
-ALTER TABLE "users" ADD COLUMN     "uploadedDocuments" TEXT[];
+-- No need to add this column since we're using a proper relation
+-- ALTER TABLE "users" ADD COLUMN     "uploadedDocuments" TEXT[];
+
+-- Instead, we should add the relation between users and documents
+ALTER TABLE "documents" ADD COLUMN "userId" TEXT;
+ALTER TABLE "documents" ADD CONSTRAINT "documents_userId_fkey" FOREIGN KEY ("userId") REFERENCES "users"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- CreateTable
 CREATE TABLE "invoices" (

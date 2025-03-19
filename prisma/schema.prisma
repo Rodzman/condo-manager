@@ -118,9 +118,9 @@ model Vehicle {
   year       Int
   createdAt  DateTime @default(now()) @map("created_at")
   updatedAt  DateTime @updatedAt @map("updated_at")
-  unitId     String?
+  unitId     String?  @map("unit_id")
   resident   Resident @relation(fields: [residentId], references: [id], onDelete: Cascade)
-  Unit       Unit?    @relation(fields: [unitId], references: [id])
+  unit       Unit?    @relation(fields: [unitId], references: [id])
 
   @@map("vehicles")
 }
