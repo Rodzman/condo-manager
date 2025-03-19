@@ -1,4 +1,4 @@
-import { prisma } from "@/prisma";
+import { db as prisma } from "@/server/db";
 import bcryptjs from "bcryptjs";
 
 async function createTestUser() {

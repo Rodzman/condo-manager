@@ -10,13 +10,21 @@ const Header = () => {
   return (
     <header className="bg-primary text-primary-foreground">
       <nav className="container mx-auto flex items-center justify-between p-4">
-        <Link href="/" className="text-2xl font-bold">
+        <Link href="/dashboard" className="text-2xl font-bold">
           CondoManager
         </Link>
         <ul className="flex space-x-6">
           <li>
+            <Link
+              href="/dashboard"
+              className="hover:text-primary-foreground/80"
+            >
+              Dashboard
+            </Link>
+          </li>
+          <li>
             <Link href="/units" className="hover:text-primary-foreground/80">
-              Units
+              Unidades
             </Link>
           </li>
           <li>
@@ -24,15 +32,12 @@ const Header = () => {
               href="/communication"
               className="hover:text-primary-foreground/80"
             >
-              Communication
+              Comunicação
             </Link>
           </li>
           <li>
-            <Link
-              href="/financial"
-              className="hover:text-primary-foreground/80"
-            >
-              Financial
+            <Link href="/finances" className="hover:text-primary-foreground/80">
+              Financeiro
             </Link>
           </li>
           <li>
@@ -40,21 +45,21 @@ const Header = () => {
               href="/reservations"
               className="hover:text-primary-foreground/80"
             >
-              Reservations
+              Reservas
             </Link>
           </li>
         </ul>
         <div>
           {session ? (
             <>
-              <span className="mr-4">Welcome, {session.user?.name}</span>
+              <span className="mr-4">Olá, {session.user?.name}</span>
               <Button variant="secondary" onClick={() => signOut()}>
-                Sign out
+                Sair
               </Button>
             </>
           ) : (
             <Link href="/auth/signin">
-              <Button variant="secondary">Sign in</Button>
+              <Button variant="secondary">Entrar</Button>
             </Link>
           )}
         </div>

@@ -3,6 +3,7 @@ import { Inter } from "next/font/google";
 import { ThemeProvider } from "@/providers/themeProvider";
 import "@/styles/globals.css";
 import type { Metadata, Viewport } from "next";
+import { TRPCReactProvider } from "@/trpc/react";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -21,23 +22,27 @@ export const viewport: Viewport = {
 
 export default function RootLayout({
   children,
+  headers,
 }: {
   children: React.ReactNode;
+  headers: Headers;
 }) {
   return (
     <html lang="pt-BR" suppressHydrationWarning>
       <head />
       <body className={`${inter.className} antialiased`}>
-        <ThemeProvider
-          attribute="class"
-          defaultTheme="system"
-          enableSystem
-          disableTransitionOnChange
-          storageKey="reserva-sapetinga-theme"
-          themes={["light", "dark"]}
-        >
-          {children}
-        </ThemeProvider>
+        <TRPCReactProvider headers={headers}>
+          <ThemeProvider
+            attribute="class"
+            defaultTheme="system"
+            enableSystem
+            disableTransitionOnChange
+            storageKey="reserva-sapetinga-theme"
+            themes={["light", "dark"]}
+          >
+            {children}
+          </ThemeProvider>
+        </TRPCReactProvider>
       </body>
     </html>
   );
