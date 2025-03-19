@@ -1,3 +1,10 @@
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Acessar Conta - Reserva Sapetinga",
+  description: "Acesse sua conta no Reserva Sapetinga",
+};
+
 export default function AuthLayout({
   children,
 }: {

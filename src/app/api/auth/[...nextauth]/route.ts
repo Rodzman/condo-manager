@@ -1,5 +1,5 @@
-import { GET, POST } from "@/auth";
-// import teste from "@/auth";
-// console.log("🚀 ~ teste:", teste)
+import { handlers } from "@/server/auth";
+
+const { GET, POST } = handlers;
 
 export { GET, POST };

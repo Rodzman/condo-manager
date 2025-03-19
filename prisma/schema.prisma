@@ -4,29 +4,28 @@ generator client {
 }
 
 datasource db {
-  provider = "postgresql"
-  url      = env("DATABASE_URL")
-  directUrl = env("DATABASE_URL")
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DATABASE_URL_DIRECT")
 }
 
-// Auth.js Models
 model Account {
-  id                       String  @id @default(cuid())
-  userId                   String  @map("user_id")
+  id                       String   @id @default(cuid())
+  userId                   String   @map("user_id")
   type                     String
   provider                 String
-  providerAccountId        String  @map("provider_account_id")
-  refresh_token            String? @db.Text
-  access_token            String? @db.Text
-  expires_at              Int?
-  token_type              String?
-  scope                   String?
-  id_token               String? @db.Text
-  session_state          String?
+  providerAccountId        String   @map("provider_account_id")
+  refresh_token            String?
+  access_token             String?
+  expires_at               Int?
+  token_type               String?
+  scope                    String?
+  id_token                 String?
+  session_state            String?
   refresh_token_expires_in Int?
-  user                    User    @relation(fields: [userId], references: [id], onDelete: Cascade)
-  createdAt               DateTime @default(now()) @map("created_at")
-  updatedAt               DateTime @updatedAt @map("updated_at")
+  createdAt                DateTime @default(now()) @map("created_at")
+  updatedAt                DateTime @updatedAt @map("updated_at")
+  user                     User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@unique([provider, providerAccountId])
   @@map("accounts")
@@ -37,27 +36,27 @@ model Session {
   sessionToken String   @unique @map("session_token")
   userId       String   @map("user_id")
   expires      DateTime
-  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   createdAt    DateTime @default(now()) @map("created_at")
   updatedAt    DateTime @updatedAt @map("updated_at")
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@map("sessions")
 }
 
 model User {
-  id            String    @id @default(cuid())
+  id            String     @id @default(cuid())
   name          String?
-  email         String?   @unique
-  emailVerified DateTime? @map("email_verified")
+  email         String?    @unique
+  emailVerified DateTime?  @map("email_verified")
   image         String?
-  password      String?   @db.Text
-  role          String    @default("resident") // resident, admin, manager, security, employee
+  password      String?
+  role          String     @default("resident")
+  createdAt     DateTime   @default(now()) @map("created_at")
+  updatedAt     DateTime   @updatedAt @map("updated_at")
   accounts      Account[]
+  documents     Document[]
   sessions      Session[]
-  units         Unit[]    // Relation to owned units
-  uploadedDocuments String[] // IDs of documents uploaded by the user
-  createdAt     DateTime  @default(now()) @map("created_at")
-  updatedAt     DateTime  @updatedAt @map("updated_at")
+  units         Unit[]
 
   @@map("users")
 }
@@ -72,24 +71,23 @@ model VerificationToken {
   @@map("verification_tokens")
 }
 
-// Application Models
 model Unit {
-  id         String        @id @default(cuid())
-  ownerId    String        @map("owner_id")
-  owner      User          @relation(fields: [ownerId], references: [id], onDelete: Cascade)
-  residents  Resident[]
-  vehicles   Vehicle[]     // Added direct relation to vehicles
-  visitors   Visitor[]
-  maintenance Maintenance[]
-  invoices   Invoice[]     // Added relation to invoices
-  reservations Reservation[] // Added relation to reservations
-  number     Int
-  floor      Int
-  tower      String
-  rooms      Int
-  size       Int
-  createdAt  DateTime      @default(now()) @map("created_at")
-  updatedAt  DateTime      @updatedAt @map("updated_at")
+  id           String        @id @default(cuid())
+  ownerId      String        @map("owner_id")
+  number       Int
+  floor        Int
+  tower        String
+  rooms        Int
+  size         Int
+  createdAt    DateTime      @default(now()) @map("created_at")
+  updatedAt    DateTime      @updatedAt @map("updated_at")
+  invoices     Invoice[]
+  maintenance  Maintenance[]
+  reservations Reservation[]
+  residents    Resident[]
+  owner        User          @relation(fields: [ownerId], references: [id], onDelete: Cascade)
+  vehicles     Vehicle[]
+  visitors     Visitor[]
 
   @@unique([tower, floor, number])
   @@map("units")
@@ -102,10 +100,10 @@ model Resident {
   phone     String?
   age       Int?
   unitId    String    @map("unit_id")
-  unit      Unit      @relation(fields: [unitId], references: [id], onDelete: Cascade)
-  vehicles  Vehicle[]
   createdAt DateTime  @default(now()) @map("created_at")
   updatedAt DateTime  @updatedAt @map("updated_at")
+  unit      Unit      @relation(fields: [unitId], references: [id], onDelete: Cascade)
+  vehicles  Vehicle[]
 
   @@map("residents")
 }
@@ -113,9 +111,6 @@ model Resident {
 model Vehicle {
   id         String   @id @default(cuid())
   residentId String   @map("resident_id")
-  resident   Resident @relation(fields: [residentId], references: [id], onDelete: Cascade)
-  unitId     String   @map("unit_id")
-  unit       Unit     @relation(fields: [unitId], references: [id], onDelete: Cascade)
   plate      String   @unique
   color      String
   brand      String
@@ -123,19 +118,22 @@ model Vehicle {
   year       Int
   createdAt  DateTime @default(now()) @map("created_at")
   updatedAt  DateTime @updatedAt @map("updated_at")
+  unitId     String?  @map("unit_id")
+  resident   Resident @relation(fields: [residentId], references: [id], onDelete: Cascade)
+  unit       Unit?    @relation(fields: [unitId], references: [id])
 
   @@map("vehicles")
 }
 
 model Visitor {
-  id        String   @id @default(cuid())
+  id        String     @id @default(cuid())
   name      String
   phone     String
-  unitId    String   @map("unit_id")
-  unit      Unit     @relation(fields: [unitId], references: [id], onDelete: Cascade)
-  visitLogs VisitLog[] // Added relation to visit logs
-  createdAt DateTime @default(now()) @map("created_at")
-  updatedAt DateTime @updatedAt @map("updated_at")
+  unitId    String     @map("unit_id")
+  createdAt DateTime   @default(now()) @map("created_at")
+  updatedAt DateTime   @updatedAt @map("updated_at")
+  visitLogs VisitLog[]
+  unit      Unit       @relation(fields: [unitId], references: [id], onDelete: Cascade)
 
   @@map("visitors")
 }
@@ -144,11 +142,11 @@ model Maintenance {
   id          String   @id @default(cuid())
   name        String
   unitId      String   @map("unit_id")
-  unit        Unit     @relation(fields: [unitId], references: [id], onDelete: Cascade)
-  description String   @db.Text
+  description String
   status      String
   createdAt   DateTime @default(now()) @map("created_at")
   updatedAt   DateTime @updatedAt @map("updated_at")
+  unit        Unit     @relation(fields: [unitId], references: [id], onDelete: Cascade)
 
   @@map("maintenance")
 }
@@ -156,7 +154,7 @@ model Maintenance {
 model Announcement {
   id        String   @id @default(cuid())
   title     String
-  content   String   @db.Text
+  content   String
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
 
@@ -166,277 +164,271 @@ model Announcement {
 model Event {
   id          String   @id @default(cuid())
   title       String
-  description String   @db.Text
+  description String
   createdAt   DateTime @default(now()) @map("created_at")
   updatedAt   DateTime @updatedAt @map("updated_at")
 
   @@map("events")
 }
 
-// Financial Management Models
 model Invoice {
-  id            String    @id @default(cuid())
-  unitId        String    @map("unit_id")
-  unit          Unit      @relation(fields: [unitId], references: [id], onDelete: Cascade)
-  amount        Decimal   @db.Decimal(10, 2)
-  dueDate       DateTime
-  isPaid        Boolean   @default(false)
-  description   String
-  payments      Payment[]
-  createdAt     DateTime  @default(now()) @map("created_at")
-  updatedAt     DateTime  @updatedAt @map("updated_at")
+  id          String    @id @default(cuid())
+  unitId      String    @map("unit_id")
+  amount      Decimal   @db.Decimal(10, 2)
+  dueDate     DateTime
+  isPaid      Boolean   @default(false)
+  description String
+  createdAt   DateTime  @default(now()) @map("created_at")
+  updatedAt   DateTime  @updatedAt @map("updated_at")
+  unit        Unit      @relation(fields: [unitId], references: [id], onDelete: Cascade)
+  payments    Payment[]
 
   @@map("invoices")
 }
 
 model Payment {
-  id            String    @id @default(cuid())
-  invoiceId     String    @map("invoice_id")
-  invoice       Invoice   @relation(fields: [invoiceId], references: [id], onDelete: Cascade)
-  amount        Decimal   @db.Decimal(10, 2)
+  id            String   @id @default(cuid())
+  invoiceId     String   @map("invoice_id")
+  amount        Decimal  @db.Decimal(10, 2)
   paymentDate   DateTime
   paymentMethod String
   reference     String?
-  createdAt     DateTime  @default(now()) @map("created_at")
-  updatedAt     DateTime  @updatedAt @map("updated_at")
+  createdAt     DateTime @default(now()) @map("created_at")
+  updatedAt     DateTime @updatedAt @map("updated_at")
+  invoice       Invoice  @relation(fields: [invoiceId], references: [id], onDelete: Cascade)
 
   @@map("payments")
 }
 
 model Expense {
-  id            String    @id @default(cuid())
-  title         String
-  amount        Decimal   @db.Decimal(10, 2)
-  category      String
-  paymentDate   DateTime
-  description   String?   @db.Text
-  receipt       String?   // URL to receipt document
-  createdAt     DateTime  @default(now()) @map("created_at")
-  updatedAt     DateTime  @updatedAt @map("updated_at")
+  id          String   @id @default(cuid())
+  title       String
+  amount      Decimal  @db.Decimal(10, 2)
+  category    String
+  paymentDate DateTime
+  description String?
+  receipt     String?
+  createdAt   DateTime @default(now()) @map("created_at")
+  updatedAt   DateTime @updatedAt @map("updated_at")
 
   @@map("expenses")
 }
 
-// Employee Management Models
 model Employee {
-  id            String    @id @default(cuid())
-  name          String
-  email         String?
-  phone         String
-  position      String
-  startDate     DateTime
-  endDate       DateTime?
-  shifts        Shift[]
-  tasks         Task[]
-  activities    ActivityLog[]
-  createdAt     DateTime  @default(now()) @map("created_at")
-  updatedAt     DateTime  @updatedAt @map("updated_at")
+  id         String        @id @default(cuid())
+  name       String
+  email      String?
+  phone      String
+  position   String
+  startDate  DateTime
+  endDate    DateTime?
+  createdAt  DateTime      @default(now()) @map("created_at")
+  updatedAt  DateTime      @updatedAt @map("updated_at")
+  activities ActivityLog[]
+  shifts     Shift[]
+  tasks      Task[]
 
   @@map("employees")
 }
 
 model Shift {
-  id            String    @id @default(cuid())
-  employeeId    String    @map("employee_id")
-  employee      Employee  @relation(fields: [employeeId], references: [id], onDelete: Cascade)
-  startTime     DateTime
-  endTime       DateTime
-  createdAt     DateTime  @default(now()) @map("created_at")
-  updatedAt     DateTime  @updatedAt @map("updated_at")
+  id         String   @id @default(cuid())
+  employeeId String   @map("employee_id")
+  startTime  DateTime
+  endTime    DateTime
+  createdAt  DateTime @default(now()) @map("created_at")
+  updatedAt  DateTime @updatedAt @map("updated_at")
+  employee   Employee @relation(fields: [employeeId], references: [id], onDelete: Cascade)
 
   @@map("shifts")
 }
 
 model Task {
-  id            String    @id @default(cuid())
-  employeeId    String    @map("employee_id")
-  employee      Employee  @relation(fields: [employeeId], references: [id], onDelete: Cascade)
-  title         String
-  description   String    @db.Text
-  status        String    @default("pending") // pending, in_progress, completed
-  dueDate       DateTime?
-  completedAt   DateTime?
-  createdAt     DateTime  @default(now()) @map("created_at")
-  updatedAt     DateTime  @updatedAt @map("updated_at")
+  id          String    @id @default(cuid())
+  employeeId  String    @map("employee_id")
+  title       String
+  description String
+  status      String    @default("pending")
+  dueDate     DateTime?
+  completedAt DateTime?
+  createdAt   DateTime  @default(now()) @map("created_at")
+  updatedAt   DateTime  @updatedAt @map("updated_at")
+  employee    Employee  @relation(fields: [employeeId], references: [id], onDelete: Cascade)
 
   @@map("tasks")
 }
 
 model ActivityLog {
-  id            String    @id @default(cuid())
-  employeeId    String    @map("employee_id")
-  employee      Employee  @relation(fields: [employeeId], references: [id], onDelete: Cascade)
-  action        String
-  details       String?   @db.Text
-  timestamp     DateTime  @default(now())
-  createdAt     DateTime  @default(now()) @map("created_at")
-  updatedAt     DateTime  @updatedAt @map("updated_at")
+  id         String   @id @default(cuid())
+  employeeId String   @map("employee_id")
+  action     String
+  details    String?
+  timestamp  DateTime @default(now())
+  createdAt  DateTime @default(now()) @map("created_at")
+  updatedAt  DateTime @updatedAt @map("updated_at")
+  employee   Employee @relation(fields: [employeeId], references: [id], onDelete: Cascade)
 
   @@map("activity_logs")
 }
 
-// Inventory Management Models
 model InventoryItem {
-  id            String    @id @default(cuid())
-  name          String
-  description   String?   @db.Text
-  category      String
-  quantity      Int
-  unit          String    // e.g., pieces, kg, liters
-  minQuantity   Int       // threshold for restock alerts
-  movements     InventoryMovement[]
-  createdAt     DateTime  @default(now()) @map("created_at")
-  updatedAt     DateTime  @updatedAt @map("updated_at")
+  id          String              @id @default(cuid())
+  name        String
+  description String?
+  category    String
+  quantity    Int
+  unit        String
+  minQuantity Int
+  createdAt   DateTime            @default(now()) @map("created_at")
+  updatedAt   DateTime            @updatedAt @map("updated_at")
+  movements   InventoryMovement[]
 
   @@map("inventory_items")
 }
 
 model InventoryMovement {
-  id            String    @id @default(cuid())
-  itemId        String    @map("item_id")
-  item          InventoryItem @relation(fields: [itemId], references: [id], onDelete: Cascade)
-  quantity      Int       // positive for in, negative for out
-  reason        String
-  requestedBy   String?
-  approvedBy    String?
-  movementDate  DateTime  @default(now())
-  createdAt     DateTime  @default(now()) @map("created_at")
-  updatedAt     DateTime  @updatedAt @map("updated_at")
+  id           String        @id @default(cuid())
+  itemId       String        @map("item_id")
+  quantity     Int
+  reason       String
+  requestedBy  String?
+  approvedBy   String?
+  movementDate DateTime      @default(now())
+  createdAt    DateTime      @default(now()) @map("created_at")
+  updatedAt    DateTime      @updatedAt @map("updated_at")
+  item         InventoryItem @relation(fields: [itemId], references: [id], onDelete: Cascade)
 
   @@map("inventory_movements")
 }
 
-// Common Area and Reservation Models
 model CommonArea {
-  id            String    @id @default(cuid())
-  name          String
-  description   String?   @db.Text
-  capacity      Int
-  openTime      String?   // e.g., "08:00"
-  closeTime     String?   // e.g., "22:00"
-  reservations  Reservation[]
-  createdAt     DateTime  @default(now()) @map("created_at")
-  updatedAt     DateTime  @updatedAt @map("updated_at")
+  id           String        @id @default(cuid())
+  name         String
+  description  String?
+  capacity     Int
+  openTime     String?
+  closeTime    String?
+  createdAt    DateTime      @default(now()) @map("created_at")
+  updatedAt    DateTime      @updatedAt @map("updated_at")
+  reservations Reservation[]
 
   @@map("common_areas")
 }
 
 model Reservation {
-  id            String    @id @default(cuid())
-  areaId        String    @map("area_id")
-  area          CommonArea @relation(fields: [areaId], references: [id], onDelete: Cascade)
-  unitId        String    @map("unit_id")
-  unit          Unit      @relation(fields: [unitId], references: [id], onDelete: Cascade)
-  startTime     DateTime
-  endTime       DateTime
-  purpose       String
-  guestCount    Int       @default(0)
-  status        String    @default("pending") // pending, approved, rejected, cancelled
-  approvedBy    String?
-  rejectionReason String?  @db.Text
-  guests        ReservationGuest[]
-  createdAt     DateTime  @default(now()) @map("created_at")
-  updatedAt     DateTime  @updatedAt @map("updated_at")
+  id              String             @id @default(cuid())
+  areaId          String             @map("area_id")
+  unitId          String             @map("unit_id")
+  startTime       DateTime
+  endTime         DateTime
+  purpose         String
+  guestCount      Int                @default(0)
+  status          String             @default("pending")
+  approvedBy      String?
+  rejectionReason String?
+  createdAt       DateTime           @default(now()) @map("created_at")
+  updatedAt       DateTime           @updatedAt @map("updated_at")
+  guests          ReservationGuest[]
+  area            CommonArea         @relation(fields: [areaId], references: [id], onDelete: Cascade)
+  unit            Unit               @relation(fields: [unitId], references: [id], onDelete: Cascade)
 
   @@map("reservations")
 }
 
 model ReservationGuest {
-  id            String    @id @default(cuid())
-  reservationId String    @map("reservation_id")
-  reservation   Reservation @relation(fields: [reservationId], references: [id], onDelete: Cascade)
+  id            String      @id @default(cuid())
+  reservationId String      @map("reservation_id")
   name          String
   document      String?
-  createdAt     DateTime  @default(now()) @map("created_at")
-  updatedAt     DateTime  @updatedAt @map("updated_at")
+  createdAt     DateTime    @default(now()) @map("created_at")
+  updatedAt     DateTime    @updatedAt @map("updated_at")
+  reservation   Reservation @relation(fields: [reservationId], references: [id], onDelete: Cascade)
 
   @@map("reservation_guests")
 }
 
-// Document Management Models
 model DocumentCategory {
-  id            String    @id @default(cuid())
-  name          String
-  description   String?
-  documents     Document[]
-  createdAt     DateTime  @default(now()) @map("created_at")
-  updatedAt     DateTime  @updatedAt @map("updated_at")
+  id          String     @id @default(cuid())
+  name        String
+  description String?
+  createdAt   DateTime   @default(now()) @map("created_at")
+  updatedAt   DateTime   @updatedAt @map("updated_at")
+  documents   Document[]
 
   @@map("document_categories")
 }
 
 model Document {
-  id            String    @id @default(cuid())
-  title         String
-  description   String?   @db.Text
-  fileUrl       String
-  fileType      String
-  fileSize      Int
-  categoryId    String?   @map("category_id")
-  category      DocumentCategory? @relation(fields: [categoryId], references: [id], onDelete: SetNull)
-  isPublic      Boolean   @default(false)
-  uploadedBy    String
-  createdAt     DateTime  @default(now()) @map("created_at")
-  updatedAt     DateTime  @updatedAt @map("updated_at")
+  id          String            @id @default(cuid())
+  title       String
+  description String?
+  fileUrl     String
+  fileType    String
+  fileSize    Int
+  categoryId  String?           @map("category_id")
+  isPublic    Boolean           @default(false)
+  uploadedBy  String
+  createdAt   DateTime          @default(now()) @map("created_at")
+  updatedAt   DateTime          @updatedAt @map("updated_at")
+  userId      String?
+  category    DocumentCategory? @relation(fields: [categoryId], references: [id])
+  User        User?             @relation(fields: [userId], references: [id])
 
   @@map("documents")
 }
 
-// Communication Models
 model Chat {
-  id            String    @id @default(cuid())
-  messages      Message[]
-  participants  String[]  // Array of user IDs
-  isGroup       Boolean   @default(false)
-  groupName     String?
-  createdAt     DateTime  @default(now()) @map("created_at")
-  updatedAt     DateTime  @updatedAt @map("updated_at")
+  id           String    @id @default(cuid())
+  participants String[]
+  isGroup      Boolean   @default(false)
+  groupName    String?
+  createdAt    DateTime  @default(now()) @map("created_at")
+  updatedAt    DateTime  @updatedAt @map("updated_at")
+  messages     Message[]
 
   @@map("chats")
 }
 
 model Message {
-  id            String    @id @default(cuid())
-  chatId        String    @map("chat_id")
-  chat          Chat      @relation(fields: [chatId], references: [id], onDelete: Cascade)
-  senderId      String    @map("sender_id")
-  content       String    @db.Text
-  readBy        String[]  // Array of user IDs
-  createdAt     DateTime  @default(now()) @map("created_at")
-  updatedAt     DateTime  @updatedAt @map("updated_at")
+  id        String   @id @default(cuid())
+  chatId    String   @map("chat_id")
+  senderId  String   @map("sender_id")
+  content   String
+  readBy    String[]
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+  chat      Chat     @relation(fields: [chatId], references: [id], onDelete: Cascade)
 
   @@map("messages")
 }
 
-// Enhanced Visitor Management
 model VisitLog {
-  id            String    @id @default(cuid())
-  visitorId     String    @map("visitor_id")
-  visitor       Visitor   @relation(fields: [visitorId], references: [id], onDelete: Cascade)
-  entryTime     DateTime
-  exitTime      DateTime?
-  authorizedBy  String?
-  vehicle       String?
-  notes         String?   @db.Text
-  createdAt     DateTime  @default(now()) @map("created_at")
-  updatedAt     DateTime  @updatedAt @map("updated_at")
+  id           String    @id @default(cuid())
+  visitorId    String    @map("visitor_id")
+  entryTime    DateTime
+  exitTime     DateTime?
+  authorizedBy String?
+  vehicle      String?
+  notes        String?
+  createdAt    DateTime  @default(now()) @map("created_at")
+  updatedAt    DateTime  @updatedAt @map("updated_at")
+  visitor      Visitor   @relation(fields: [visitorId], references: [id], onDelete: Cascade)
 
   @@map("visit_logs")
 }
 
-// Security Models
 model SecurityIncident {
-  id            String    @id @default(cuid())
-  title         String
-  description   String    @db.Text
-  incidentDate  DateTime
-  location      String
-  reportedBy    String
-  status        String    @default("open") // open, investigating, resolved, closed
-  severity      String    // low, medium, high, critical
-  resolution    String?   @db.Text
-  createdAt     DateTime  @default(now()) @map("created_at")
-  updatedAt     DateTime  @updatedAt @map("updated_at")
+  id           String   @id @default(cuid())
+  title        String
+  description  String
+  incidentDate DateTime
+  location     String
+  reportedBy   String
+  status       String   @default("open")
+  severity     String
+  resolution   String?
+  createdAt    DateTime @default(now()) @map("created_at")
+  updatedAt    DateTime @updatedAt @map("updated_at")
 
   @@map("security_incidents")
 }

@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server"
-import { prisma } from "@/prisma"
+import { db as prisma } from "@/server/db"
 import bcryptjs from "bcryptjs"
 
 // const prisma = new PrismaClient()

@@ -1,13 +1,14 @@
 "use client";
 
-import { useFormState, useFormStatus } from "react-dom";
+import { useActionState } from "react";
+import { useFormStatus } from "react-dom";
 import { Button } from "@/components/ui/button";
-import { useState } from "react";
 import { FcGoogle } from "react-icons/fc";
 import { FaGithub } from "react-icons/fa";
 import Link from "next/link";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
+import { SignInState } from "@/app/(auth)/auth/signin/actions";
 
 interface AuthProvider {
   id: string;
@@ -15,9 +16,15 @@ interface AuthProvider {
 }
 
 interface SignInFormProps {
-  onSubmit: (formData: FormData) => Promise<void>;
+  signInAction: (
+    prevState: SignInState,
+    formData: FormData,
+  ) => Promise<SignInState>;
   providers: Record<string, AuthProvider>;
-  onProviderSignIn: (providerId: string) => Promise<void>;
+  providerSignInAction: (
+    providerId: string,
+    callbackUrl?: string,
+  ) => Promise<SignInState | null>;
 }
 
 function SubmitButton() {
@@ -65,11 +72,12 @@ function SubmitButton() {
 }
 
 export default function SignInForm({
-  onSubmit,
+  signInAction,
   providers,
-  onProviderSignIn,
+  providerSignInAction,
 }: SignInFormProps) {
-  const [error, setError] = useState<string | null>(null);
+  const initialState: SignInState = null;
+  const [state, dispatch] = useActionState(signInAction, initialState);
 
   const providerIcons = {
     google: <FcGoogle className="h-5 w-5" aria-hidden="true" />,
@@ -78,24 +86,14 @@ export default function SignInForm({
 
   return (
     <div className="grid gap-6">
-      <form
-        className="grid gap-4"
-        action={async (formData) => {
-          try {
-            await onSubmit(formData);
-            setError(null);
-          } catch (e) {
-            setError("Credenciais inválidas. Por favor, tente novamente.");
-          }
-        }}
-      >
-        {error && (
+      <form className="grid gap-4" action={dispatch}>
+        {state?.error && (
           <div
             className="bg-destructive/15 text-destructive rounded-md p-3 text-sm"
             role="alert"
             aria-live="polite"
           >
-            <p>{error}</p>
+            <p>{state.error}</p>
           </div>
         )}
 
@@ -159,14 +157,7 @@ export default function SignInForm({
             <form
               key={provider.id}
               action={async () => {
-                try {
-                  await onProviderSignIn(provider.id);
-                  setError(null);
-                } catch (e) {
-                  setError(
-                    "Falha ao entrar com o provedor. Por favor, tente novamente.",
-                  );
-                }
+                await providerSignInAction(provider.id);
               }}
             >
               <Button
