@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server"
 import { auth } from "@/auth"
-import { createUnit, deleteUnit, getUnits, updateUnit } from "@/server/actions/unit"
+import { createVehicle, deleteVehicle, getVehicles, updateVehicle } from "@/server/actions/vehicle"
 
 export async function GET(request: Request) {
     const session = await auth()
@@ -9,10 +9,10 @@ export async function GET(request: Request) {
     }
 
     try {
-        const units = await getUnits()
-        return NextResponse.json(units)
+        const vehicles = await getVehicles()
+        return NextResponse.json(vehicles)
     } catch (error) {
-        return NextResponse.json({ error: "Failed to fetch units" }, { status: 500 })
+        return NextResponse.json({ error: "Failed to fetch vehicles" }, { status: 500 })
     }
 }
 
@@ -24,10 +24,10 @@ export async function POST(request: Request) {
 
     try {
         const data = await request.json()
-        const newUnit = await createUnit(data)
-        return NextResponse.json(newUnit, { status: 201 })
+        const newVehicle = await createVehicle(data)
+        return NextResponse.json(newVehicle, { status: 201 })
     } catch (error) {
-        return NextResponse.json({ error: "Failed to create unit" }, { status: 500 })
+        return NextResponse.json({ error: "Failed to create vehicle" }, { status: 500 })
     }
 }
 
@@ -40,14 +40,14 @@ export async function PUT(request: Request) {
     try {
         const data = await request.json()
         if (!data.id) {
-            return NextResponse.json({ error: "Missing unit id" }, { status: 400 })
+            return NextResponse.json({ error: "Missing vehicle id" }, { status: 400 })
         }
 
         const { id, ...updateData } = data
-        const updatedUnit = await updateUnit(id, updateData)
-        return NextResponse.json(updatedUnit)
+        const updatedVehicle = await updateVehicle(id, updateData)
+        return NextResponse.json(updatedVehicle)
     } catch (error) {
-        return NextResponse.json({ error: "Failed to update unit" }, { status: 500 })
+        return NextResponse.json({ error: "Failed to update vehicle" }, { status: 500 })
     }
 }
 
@@ -64,9 +64,9 @@ export async function DELETE(request: Request) {
             return NextResponse.json({ error: "Missing id" }, { status: 400 })
         }
 
-        const deletedUnit = await deleteUnit(id)
-        return NextResponse.json(deletedUnit)
+        const deletedVehicle = await deleteVehicle(id)
+        return NextResponse.json(deletedVehicle)
     } catch (error) {
-        return NextResponse.json({ error: "Failed to delete unit" }, { status: 500 })
+        return NextResponse.json({ error: "Failed to delete vehicle" }, { status: 500 })
     }
 }

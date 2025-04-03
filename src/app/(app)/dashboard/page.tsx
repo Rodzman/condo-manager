@@ -14,12 +14,12 @@ import {
   MessageSquare,
 } from "lucide-react";
 import { auth } from "@/auth";
-
+import { redirect } from "next/navigation";
 export default async function ResidentDashboard() {
   const session = await auth();
 
   if (!session) {
-    return <div>Carregando...</div>;
+    redirect("/auth/signin");
   }
 
   return (

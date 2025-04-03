@@ -1,10 +1,14 @@
-import type React from "react";
-import { Inter } from "next/font/google";
+import { auth } from "@/auth";
+import { Toaster } from "@/components/ui/toast";
+import { ROLES } from "@/constants/roles";
+import SessionProvider from "@/providers/SessionProvider";
 import { ThemeProvider } from "@/providers/themeProvider";
 import "@/styles/globals.css";
-import type { Metadata, Viewport } from "next";
 import { TRPCReactProvider } from "@/trpc/react";
-import { Toaster } from "@/components/ui/toast";
+import type { Metadata, Viewport } from "next";
+import { Inter } from "next/font/google";
+import { redirect } from "next/navigation";
+import type React from "react";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -21,29 +25,33 @@ export const viewport: Viewport = {
   ],
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
   headers,
 }: {
   children: React.ReactNode;
   headers: Headers;
 }) {
+  const session = await auth();
+
   return (
     <html lang="pt-BR" suppressHydrationWarning>
       <head />
       <body className={`${inter.className} antialiased`}>
         <TRPCReactProvider headers={headers}>
-          <ThemeProvider
-            attribute="class"
-            defaultTheme="system"
-            enableSystem
-            disableTransitionOnChange
-            storageKey="reserva-sapetinga-theme"
-            themes={["light", "dark"]}
-          >
-            {children}
-            <Toaster />
-          </ThemeProvider>
+          <SessionProvider session={session}>
+            <ThemeProvider
+              attribute="class"
+              defaultTheme="system"
+              enableSystem
+              disableTransitionOnChange
+              storageKey="reserva-sapetinga-theme"
+              themes={["light", "dark"]}
+            >
+              {children}
+              <Toaster />
+            </ThemeProvider>
+          </SessionProvider>
         </TRPCReactProvider>
       </body>
     </html>

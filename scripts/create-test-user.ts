@@ -1,4 +1,4 @@
-import { db as prisma } from "@/server/db";
+import { db } from "@/server/db";
 import bcryptjs from "bcryptjs";
 
 async function createTestUser() {
@@ -8,7 +8,7 @@ async function createTestUser() {
     try {
         const hashedPassword = await bcryptjs.hash(password, 10);
 
-        const user = await prisma.user.create({
+        const user = await db.user.create({
             data: {
                 email,
                 name: "Test User",
@@ -20,7 +20,7 @@ async function createTestUser() {
     } catch (error) {
         console.error("Error creating test user:", error);
     } finally {
-        await prisma.$disconnect();
+        await db.$disconnect();
     }
 }
 

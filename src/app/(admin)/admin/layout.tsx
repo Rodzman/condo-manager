@@ -2,7 +2,7 @@ import { Metadata } from "next";
 import { redirect } from "next/navigation";
 import { auth } from "@/auth";
 import { ROLES } from "@/constants/roles";
-import AdminSidebar from "@/components/admin/AdminSidebar";
+import { AdminSidebar } from "@/components/features/admin";
 
 export const metadata: Metadata = {
   title: "Admin Dashboard | Condo Manager",

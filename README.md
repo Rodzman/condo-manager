@@ -57,12 +57,8 @@ cp .env.example .env
 
 4. Update the `.env` file with your database credentials and other configuration values:
 
-```
-# Database
-DATABASE_URL="postgresql://username:password@localhost:5432/condo_manager"
-
-# Auth.js
-AUTH_SECRET="your-auth-secret"
+```bash
+cp .env.example .env
 ```
 
 5. Run database migrations
@@ -139,3 +135,39 @@ This project follows these development practices:
 ## License
 
 This project is licensed under the MIT License - see the LICENSE file for details.
+
+## Recommended Project Structure
+
+Following the Bulletproof React architecture patterns, here's a recommended structure for this Next.js App Router project:
+
+```
+src/
+├── app/                      # Next.js App Router
+│   ├── (auth)/               # Auth routes (grouped)
+│   ├── (admin)/              # Admin routes (grouped)
+│   ├── (app)/                # Main app routes (grouped)
+│   ├── api/                  # API routes
+│   └── global-error.tsx      # Global error boundary
+├── components/               # Shared components
+│   ├── auth/                 # Auth related components
+│   ├── features/             # Feature-specific components
+│   │   ├── units/
+│   │   ├── residents/
+│   │   ├── vehicles/
+│   │   └── ...
+│   └── ui/                   # UI components (buttons, inputs, etc.)
+├── hooks/                    # Custom hooks
+├── lib/                      # Utility libraries
+├── server/                   # Server-side code
+│   ├── db/                   # Database utilities & queries
+│   ├── auth/                 # Auth configuration
+│   └── api/                  # API logic separated by domain
+├── services/                 # External service integrations
+├── utils/                    # Utility functions
+├── types/                    # TypeScript type definitions
+├── styles/                   # Global styles
+└── constants/                # Application constants
+
+```
+
+This structure separates concerns, organizes code by features, and follows Next.js App Router conventions. It improves maintainability by keeping related code together and reduces cognitive load when navigating the codebase.

@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server"
 import { auth } from "@/auth"
-import { createUnit, deleteUnit, getUnits, updateUnit } from "@/server/actions/unit"
+import { createResident, deleteResident, getResidents, updateResident } from "@/server/actions/resident"
 
 export async function GET(request: Request) {
     const session = await auth()
@@ -9,10 +9,10 @@ export async function GET(request: Request) {
     }
 
     try {
-        const units = await getUnits()
-        return NextResponse.json(units)
+        const residents = await getResidents()
+        return NextResponse.json(residents)
     } catch (error) {
-        return NextResponse.json({ error: "Failed to fetch units" }, { status: 500 })
+        return NextResponse.json({ error: "Failed to fetch residents" }, { status: 500 })
     }
 }
 
@@ -24,10 +24,10 @@ export async function POST(request: Request) {
 
     try {
         const data = await request.json()
-        const newUnit = await createUnit(data)
-        return NextResponse.json(newUnit, { status: 201 })
+        const newResident = await createResident(data)
+        return NextResponse.json(newResident, { status: 201 })
     } catch (error) {
-        return NextResponse.json({ error: "Failed to create unit" }, { status: 500 })
+        return NextResponse.json({ error: "Failed to create resident" }, { status: 500 })
     }
 }
 
@@ -40,14 +40,14 @@ export async function PUT(request: Request) {
     try {
         const data = await request.json()
         if (!data.id) {
-            return NextResponse.json({ error: "Missing unit id" }, { status: 400 })
+            return NextResponse.json({ error: "Missing resident id" }, { status: 400 })
         }
 
         const { id, ...updateData } = data
-        const updatedUnit = await updateUnit(id, updateData)
-        return NextResponse.json(updatedUnit)
+        const updatedResident = await updateResident(id, updateData)
+        return NextResponse.json(updatedResident)
     } catch (error) {
-        return NextResponse.json({ error: "Failed to update unit" }, { status: 500 })
+        return NextResponse.json({ error: "Failed to update resident" }, { status: 500 })
     }
 }
 
@@ -64,9 +64,9 @@ export async function DELETE(request: Request) {
             return NextResponse.json({ error: "Missing id" }, { status: 400 })
         }
 
-        const deletedUnit = await deleteUnit(id)
-        return NextResponse.json(deletedUnit)
+        const deletedResident = await deleteResident(id)
+        return NextResponse.json(deletedResident)
     } catch (error) {
-        return NextResponse.json({ error: "Failed to delete unit" }, { status: 500 })
+        return NextResponse.json({ error: "Failed to delete resident" }, { status: 500 })
     }
 }

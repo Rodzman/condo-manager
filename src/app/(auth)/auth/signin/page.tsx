@@ -2,7 +2,7 @@ import { providerMap } from "@/auth";
 import { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
-import SignInForm from "@/components/SignInForm";
+import { SignInForm } from "@/components/features/auth";
 import { signInUser, signInWithProvider } from "./actions";
 
 export const metadata: Metadata = {
