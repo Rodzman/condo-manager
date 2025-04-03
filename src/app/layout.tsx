@@ -4,6 +4,7 @@ import { ThemeProvider } from "@/providers/themeProvider";
 import "@/styles/globals.css";
 import type { Metadata, Viewport } from "next";
 import { TRPCReactProvider } from "@/trpc/react";
+import { Toaster } from "@/components/ui/toast";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -41,6 +42,7 @@ export default function RootLayout({
             themes={["light", "dark"]}
           >
             {children}
+            <Toaster />
           </ThemeProvider>
         </TRPCReactProvider>
       </body>

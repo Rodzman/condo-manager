@@ -1,110 +1,141 @@
 # Condo Manager
 
-By Rodrigo Pascoalino
+**Developer: Rodrigo Pascoalino**
 
-A comprehensive property management system for condominiums built with the T3 Stack.
+A comprehensive condominium management system built with Next.js 15 and TypeScript, featuring user role-based access control, property management, invoicing, reservations, and more.
 
 ## Features
 
-- 🏢 Property Management
-- 👥 Resident Management
-- 🚗 Vehicle Control
-- 🔐 Secure Authentication
-- 📱 Responsive Design
-- 🌐 Multi-language Support
+- 🔑 **Role-Based Access Control**: Granular permissions based on user roles (Admin, Manager, Resident, Staff, Security, Guest)
+- 👥 **User Management**: Admin interface for managing user accounts and permissions
+- 🏢 **Property Management**: Track units, properties, and residents
+- 💰 **Invoicing**: Generate and manage invoices for residents
+- 📅 **Reservations**: Book common areas and amenities
+- 📊 **Reporting**: Generate insights and analytics
+- 🔒 **Authentication**: Secure authentication using Auth.js v5
 
 ## Tech Stack
 
-- [Next.js 15](https://nextjs.org/) - React Framework
-- [Auth.js](https://authjs.dev/) - Authentication
-- [Prisma](https://prisma.io) - Database ORM
-- [Tailwind CSS](https://tailwindcss.com) - Styling
-- [TypeScript](https://typescriptlang.org) - Type Safety
-- [PostgreSQL](https://postgresql.org) - Database
-
-## Prerequisites
-
-- Node.js 22+
-- PostgreSQL 16+
-- pnpm
+- **Framework**: Next.js 15
+- **Language**: TypeScript
+- **Database**: PostgreSQL with Prisma ORM
+- **Authentication**: Auth.js v5
+- **API**: tRPC for type-safe APIs
+- **UI**: TailwindCSS and shadcn/ui components
+- **State Management**: TanStack Query
 
 ## Getting Started
 
-1. Clone the repository:
+### Prerequisites
 
-   ```bash
-   git clone https://github.com/yourusername/condo-manager.git
-   cd condo-manager
-   ```
+- Node.js 18.17 or later
+- pnpm (recommended) or npm
+- PostgreSQL database
 
-2. Install dependencies:
+### Environment Setup
 
-   ```bash
-   pnpm install
-   ```
+1. Clone the repository
 
-3. Set up your environment variables:
+```bash
+git clone https://github.com/yourusername/condo-manager.git
+cd condo-manager
+```
 
-   ```bash
-   cp .env.example .env
-   ```
+2. Install dependencies
 
-   Then edit `.env` with your configuration.
+```bash
+pnpm install
+# or
+npm install
+```
 
-4. Set up the database:
+3. Set up environment variables
 
-   ```bash
-   ./start-database.sh
-   pnpm prisma migrate dev
-   ```
+```bash
+cp .env.example .env
+```
 
-5. Start the development server:
-   ```bash
-   pnpm dev
-   ```
+4. Update the `.env` file with your database credentials and other configuration values:
 
-Visit `http://localhost:3000` to see the application.
+```
+# Database
+DATABASE_URL="postgresql://username:password@localhost:5432/condo_manager"
+
+# Auth.js
+AUTH_SECRET="your-auth-secret"
+```
+
+5. Run database migrations
+
+```bash
+pnpm prisma migrate dev
+# or
+npx prisma migrate dev
+```
+
+6. Start the development server
+
+```bash
+pnpm dev
+# or
+npm run dev
+```
+
+7. Open [http://localhost:3000](http://localhost:3000) in your browser
+
+## Database Schema
+
+The application uses Prisma with a PostgreSQL database. The main entities include:
+
+- **User**: System users with role-based permissions
+- **Property**: Managed properties and buildings
+- **Unit**: Individual units within properties
+- **Invoice**: Billing information
+- **Reservation**: Common area bookings
+- **Document**: Property documentation
+
+## Role System
+
+The application implements a comprehensive role system:
+
+- **Admin**: Full system access and configuration
+- **Manager**: Property management and resident oversight
+- **Resident**: Access to personal dashboard and services
+- **Staff**: Maintenance and property management tasks
+- **Security**: Access control and visitor management
+- **Guest**: Limited access for visitors and temporary users
 
 ## Project Structure
 
 ```
 src/
-├── app/           # Next.js App Router pages and API routes
-├── components/    # Reusable UI components
-├── lib/          # Utility libraries and configurations
-├── providers/    # React context providers
-├── schemas/      # Validation schemas
-├── services/     # Business logic and external services
-├── styles/       # Global styles and Tailwind CSS
-├── translations/ # i18n translations
-├── types/        # TypeScript type definitions
-└── utils/        # Helper functions
+├── app/                # Next.js app router pages
+│   ├── (admin)/        # Admin dashboard pages
+│   ├── (auth)/         # Authentication pages
+│   ├── (dashboard)/    # User dashboard pages
+├── components/         # React components
+│   ├── admin/          # Admin-specific components
+│   ├── ui/             # UI components
+├── constants/          # Application constants
+├── lib/                # Utility functions
+├── server/             # Server-side code
+│   ├── api/            # API routes
+│   │   ├── routers/    # tRPC routers
+├── trpc/               # tRPC client setup
+├── styles/             # Global styles
+prisma/
+├── schema.prisma       # Database schema
 ```
 
-## Development Guidelines
+## Development Practices
 
-- Follow TypeScript best practices
-- Write tests for new features
-- Use conventional commits
-- Keep components small and focused
-- Follow the established folder structure
+This project follows these development practices:
 
-## Available Scripts
-
-- `pnpm dev` - Start development server
-- `pnpm build` - Build for production
-- `pnpm start` - Start production server
-- `pnpm lint` - Run ESLint
-- `pnpm format` - Format code with Prettier
-- `pnpm test` - Run tests
-
-## Contributing
-
-1. Create a feature branch
-2. Commit your changes
-3. Push to the branch
-4. Open a pull request
+- **TypeScript** for type-safe code
+- **ESLint** and **Prettier** for code formatting
+- **Conventional Commits** for commit messages
+- **CI/CD** with GitHub Actions
 
 ## License
 
-MIT License - see LICENSE for details
+This project is licensed under the MIT License - see the LICENSE file for details.

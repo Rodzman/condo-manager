@@ -2,6 +2,8 @@ import { PrismaAdapter } from "@auth/prisma-adapter";
 import { type DefaultSession, type NextAuthConfig } from "next-auth";
 import { JWT } from "next-auth/jwt";
 import GoogleProvider from "next-auth/providers/google";
+import CredentialsProvider from "next-auth/providers/credentials";
+import bcrypt from "bcryptjs";
 
 import { db } from "@/server/db";
 
@@ -54,9 +56,45 @@ declare module "next-auth/jwt" {
  */
 export const authConfig = {
     providers: [
+        CredentialsProvider({
+            name: "Credentials",
+            credentials: {
+                email: { label: "Email", type: "email" },
+                password: { label: "Password", type: "password" }
+            },
+            async authorize(credentials) {
+                if (!credentials?.email || !credentials?.password) {
+                    return null;
+                }
+
+                const user = await db.user.findUnique({
+                    where: { email: credentials.email as string },
+                });
+
+                if (!user || !user.password) {
+                    return null;
+                }
+
+                const passwordMatch = await bcrypt.compare(
+                    credentials.password as string,
+                    user.password
+                );
+
+                if (!passwordMatch) {
+                    return null;
+                }
+
+                return {
+                    id: user.id,
+                    email: user.email,
+                    name: user.name,
+                    image: user.image,
+                    role: user.role,
+                };
+            }
+        }),
         GoogleProvider({
             profile(profile) {
-                console.log("🚀 ~ profile ~ profile:", profile);
                 return {
                     id: profile.sub,
                     name: profile.name,
@@ -69,22 +107,19 @@ export const authConfig = {
         }),
     ],
     adapter: customPrismaAdapter,
+    session: {
+        strategy: "jwt",
+    },
     callbacks: {
-        session: ({ session, user }) => ({
-            ...session,
-            user: {
-                ...session.user,
-                id: user.id,
-            },
-        }),
-        async signIn({ user, account, profile }) {
-            if (account?.provider === "google" && profile) {
-                return true;
+        session: ({ session, token }) => {
+            if (token) {
+                session.user.id = token.id;
+                session.user.role = token.role as string;
             }
-            return true;
+            return session;
         },
-        async jwt({ token, user, account }) {
-            if (user && typeof user.id === "string") {
+        jwt: ({ token, user }) => {
+            if (user) {
                 token.id = user.id;
                 token.role = user.role ?? "resident";
             }

@@ -6,7 +6,13 @@ import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Menu, X } from "lucide-react";
 
-export default function Navbar() {
+export default function Navbar({
+  isLoggedIn,
+  isAdmin,
+}: {
+  isLoggedIn: boolean;
+  isAdmin: boolean;
+}) {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
@@ -69,13 +75,24 @@ export default function Navbar() {
           >
             Contato
           </Link>
-          <Button
-            className="bg-dark-green hover:bg-dark-green/90 text-white"
-            size="sm"
-            asChild
-          >
-            <Link href="/dashboard">Área do Morador</Link>
-          </Button>
+          <nav className="flex items-center gap-4">
+            {isLoggedIn ? (
+              <div className="flex items-center gap-4">
+                {isAdmin && (
+                  <Button asChild variant="outline">
+                    <Link href="/admin">Admin Dashboard</Link>
+                  </Button>
+                )}
+                <Button asChild>
+                  <Link href="/dashboard">Dashboard</Link>
+                </Button>
+              </div>
+            ) : (
+              <Button asChild>
+                <Link href="/auth/signin">Sign In</Link>
+              </Button>
+            )}
+          </nav>
         </nav>
 
         {/* Mobile Menu Button */}
