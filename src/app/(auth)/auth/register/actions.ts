@@ -52,13 +52,11 @@ export async function registerUser(prevState: RegisterState, formData: FormData)
         });
 
         // After successful registration, sign in the user
-        await signIn("credentials", {
+        return await signIn("credentials", {
             email,
             password,
-            redirectTo: "/dashboard",
+            redirectTo: '/dashboard',
         });
-
-        return null;
     } catch (error: any) {
         console.error("Registration error:", error);
         return {

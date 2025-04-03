@@ -3,7 +3,6 @@
 import { signIn } from "@/auth";
 import { LoginSchema } from "@/schemas/loginSchema";
 import { AuthError } from "next-auth";
-import { redirect } from "next/navigation";
 
 export type SignInState = {
     error?: string;
@@ -21,15 +20,12 @@ export async function signInUser(prevState: SignInState, formData: FormData) {
             return { error: result.error.errors[0]?.message || "Credenciais inválidas" };
         }
 
-        // Extract data from formData to pass directly to signIn
-        await signIn("credentials", {
+        // Let Auth.js handle the redirect
+        return await signIn("credentials", {
             email,
             password,
-            redirect: true,
             redirectTo: "/dashboard"
         });
-
-        return null;
     } catch (error) {
         console.error("Sign-in error:", error);
         if (error instanceof AuthError) {
@@ -41,10 +37,10 @@ export async function signInUser(prevState: SignInState, formData: FormData) {
 
 export async function signInWithProvider(providerId: string, callbackUrl: string = "/dashboard") {
     try {
-        await signIn(providerId, {
-            redirectTo: callbackUrl,
+        return await signIn(providerId, {
+            redirect: true,
+            callbackUrl,
         });
-        return null;
     } catch (error) {
         if (error instanceof AuthError) {
             return { error: "Falha ao entrar com o provedor. Por favor, tente novamente." };
