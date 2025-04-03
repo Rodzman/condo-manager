@@ -4,5 +4,10 @@ export type User = {
     email: string | null;
     emailVerified: Date | null;
     image: string | null;
-    password: string; // Add this line
+    password?: string | null;
+    role: string;
+    createdAt: Date;
+    updatedAt: Date;
 }
+
+export type SafeUser = Omit<User, "password">;
