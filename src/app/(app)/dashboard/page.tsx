@@ -15,6 +15,7 @@ import {
 } from "lucide-react";
 import { auth } from "@/auth";
 import { redirect } from "next/navigation";
+
 export default async function ResidentDashboard() {
   const session = await auth();
 
@@ -23,40 +24,40 @@ export default async function ResidentDashboard() {
   }
 
   return (
-    <div className="space-y-6">
-      <div>
-        <h1 className="text-2xl font-bold tracking-tight">
+    <div className="space-y-8">
+      <div className="space-y-2">
+        <h1 className="text-3xl font-bold tracking-tight">
           Bem-vindo, {session.user?.name}
         </h1>
-        <p className="text-muted-foreground">
+        <p className="text-muted-foreground text-lg">
           Gerencie suas informações e acesse os serviços do condomínio.
         </p>
       </div>
 
-      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+      <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
         <DashboardCard
-          icon={<Bell className="h-5 w-5 text-blue-600" />}
+          icon={<Bell className="h-5 w-5 text-blue-500" />}
           title="Avisos"
           description="3 novos avisos"
           linkText="Ver todos"
           linkHref="/resident/notices"
         />
         <DashboardCard
-          icon={<Calendar className="h-5 w-5 text-green-600" />}
+          icon={<Calendar className="h-5 w-5 text-emerald-500" />}
           title="Reservas"
           description="Agende áreas comuns"
           linkText="Reservar"
           linkHref="/resident/reservations"
         />
         <DashboardCard
-          icon={<FileText className="h-5 w-5 text-amber-600" />}
+          icon={<FileText className="h-5 w-5 text-amber-500" />}
           title="Documentos"
           description="Regulamentos e atas"
           linkText="Acessar"
           linkHref="/resident/documents"
         />
         <DashboardCard
-          icon={<CreditCard className="h-5 w-5 text-purple-600" />}
+          icon={<CreditCard className="h-5 w-5 text-violet-500" />}
           title="Financeiro"
           description="Próximo vencimento: 10/04"
           linkText="Ver boletos"
@@ -64,14 +65,17 @@ export default async function ResidentDashboard() {
         />
       </div>
 
-      <div className="grid gap-4 md:grid-cols-2">
+      <div className="grid gap-6 md:grid-cols-2">
         <Card>
           <CardHeader>
-            <CardTitle>Próximos Eventos</CardTitle>
+            <CardTitle className="flex items-center gap-2">
+              <Calendar className="text-primary h-5 w-5" />
+              Próximos Eventos
+            </CardTitle>
             <CardDescription>Eventos programados no condomínio</CardDescription>
           </CardHeader>
           <CardContent>
-            <div className="space-y-4">
+            <div className="space-y-6">
               <EventItem
                 title="Assembleia Geral"
                 date="15 de Abril, 2025"
@@ -96,22 +100,25 @@ export default async function ResidentDashboard() {
 
         <Card>
           <CardHeader>
-            <CardTitle>Suporte</CardTitle>
+            <CardTitle className="flex items-center gap-2">
+              <MessageSquare className="text-primary h-5 w-5" />
+              Suporte
+            </CardTitle>
             <CardDescription>
               Entre em contato com a administração
             </CardDescription>
           </CardHeader>
-          <CardContent className="space-y-4">
-            <p>
+          <CardContent className="space-y-6">
+            <p className="text-muted-foreground">
               Precisa de ajuda ou tem alguma solicitação? Entre em contato com a
               administração do condomínio.
             </p>
-            <div className="flex flex-col space-y-2">
-              <Button className="bg-dark-green hover:bg-dark-green/90 w-full">
+            <div className="flex flex-col space-y-3">
+              <Button size="lg" className="w-full">
                 <MessageSquare className="mr-2 h-4 w-4" />
                 Abrir Chamado
               </Button>
-              <Button variant="outline" className="w-full">
+              <Button variant="outline" size="lg" className="w-full">
                 Ver Chamados Anteriores
               </Button>
             </div>
@@ -136,15 +143,18 @@ function DashboardCard({
   linkHref: string;
 }) {
   return (
-    <Card>
+    <Card className="hover:border-primary/50 transition-colors">
       <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
         <CardTitle className="text-sm font-medium">{title}</CardTitle>
         {icon}
       </CardHeader>
       <CardContent>
         <div className="text-2xl font-bold">{description}</div>
-        <p className="mt-2 text-xs text-blue-600">
-          <a href={linkHref}>{linkText} →</a>
+        <p className="text-primary hover:text-primary/80 mt-2 text-sm font-medium transition-colors">
+          <a href={linkHref} className="flex items-center gap-1">
+            {linkText}
+            <span aria-hidden="true">→</span>
+          </a>
         </p>
       </CardContent>
     </Card>
@@ -163,16 +173,18 @@ function EventItem({
   location: string;
 }) {
   return (
-    <div className="flex items-start space-x-4 border-b border-gray-100 pb-4 last:border-0 last:pb-0">
-      <div className="min-w-[50px] rounded-md bg-gray-100 p-2 text-center">
-        <div className="text-xs text-gray-500">{date.split(" ")[0]}</div>
-        <div className="text-dark-green text-lg font-bold">
+    <div className="border-border flex items-start space-x-4 border-b pb-4 last:border-0 last:pb-0">
+      <div className="bg-muted min-w-[50px] rounded-lg p-2 text-center">
+        <div className="text-muted-foreground text-xs font-medium">
+          {date.split(" ")[0]}
+        </div>
+        <div className="text-primary text-lg font-bold">
           {date.split(" ")[1]?.replace(",", "")}
         </div>
       </div>
       <div>
         <h4 className="font-medium">{title}</h4>
-        <p className="text-sm text-gray-500">
+        <p className="text-muted-foreground text-sm">
           {time} • {location}
         </p>
       </div>
