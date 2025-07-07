@@ -13,11 +13,22 @@ export function validateTranslationPath(path: string): boolean {
     const parts = path.split('.');
     let current: any = translationSchema.shape;
 
-    for (const part of parts) {
-        if (!current[part]) {
+    for (let i = 0; i < parts.length; i++) {
+        const key = parts[i];
+        const next = current[key];
+
+        if (!next) {
             return false;
         }
-        current = current[part].shape;
+
+        const isLast = i === parts.length - 1;
+
+        if ('shape' in next) {
+            current = next.shape;
+        } else if (!isLast) {
+            // reached a leaf node but there are still segments
+            return false;
+        }
     }
 
     return true;
