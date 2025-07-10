@@ -1,5 +1,4 @@
 import tseslint from "@typescript-eslint/eslint-plugin";
-import eslintParser from "@typescript-eslint/parser";
 
 /** @type {import("eslint").Linter.Config} */
 const config = {
