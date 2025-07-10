@@ -1,3 +1,9 @@
+/**
+ * Returns the CSS text color class corresponding to a given vehicle type.
+ *
+ * @param type - The vehicle type to map to a color class
+ * @returns The CSS class name for the text color associated with the specified vehicle type
+ */
 export function getPlateColor(type: string): string {
   switch (type) {
     case "commercial":
