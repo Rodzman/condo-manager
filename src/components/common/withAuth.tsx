@@ -4,8 +4,8 @@ import { useSession } from "next-auth/react"
 import { useRouter } from "next/navigation"
 import { useEffect } from "react"
 
-export function withAuth(WrappedComponent: React.ComponentType) {
-  return function ProtectedRoute(props: any) {
+export function withAuth<P>(WrappedComponent: React.ComponentType<P>) {
+  return function ProtectedRoute(props: P): JSX.Element {
     const { data: session, status } = useSession()
     const router = useRouter()
 
@@ -19,7 +19,7 @@ export function withAuth(WrappedComponent: React.ComponentType) {
     }
 
     if (!session) {
-      return null
+      return <div>Redirecting...</div>
     }
 
     return <WrappedComponent {...props} />

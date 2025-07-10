@@ -5,6 +5,7 @@ import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { Button } from "@/components/ui/button";
 import type { Vehicle } from "@/types/unit";
+import { getPlateColor } from "@/utils/vehicle";
 
 type VehicleFormData = Omit<Vehicle, "id">;
 
@@ -38,25 +39,6 @@ export default function VehicleForm({
     if (!vehicle) reset();
   };
 
-  // Get plate color based on vehicle type
-  const getPlateColor = (type: string) => {
-    switch (type) {
-      case "commercial":
-      case "taxi":
-      case "driving_school":
-        return "text-red-600";
-      case "official":
-        return "text-blue-600";
-      case "test":
-        return "text-green-600";
-      case "diplomatic":
-        return "text-yellow-600";
-      case "collection":
-        return "text-gray-400";
-      default:
-        return "text-black";
-    }
-  };
 
   return (
     <form onSubmit={handleSubmit(onSubmitForm)} className="space-y-4">

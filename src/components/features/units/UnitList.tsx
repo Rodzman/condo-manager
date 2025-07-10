@@ -1,5 +1,6 @@
 import type React from "react";
 import { Button } from "@/components/ui/button";
+import { getPlateColor } from "@/utils/vehicle";
 import type {
   Unit,
   Resident,
@@ -45,24 +46,6 @@ const UnitList: React.FC<UnitListProps> = ({
   setEditingResident,
   setEditingVehicle,
 }) => {
-  const getPlateColor = (type: string) => {
-    switch (type) {
-      case "commercial":
-      case "taxi":
-      case "driving_school":
-        return "text-red-600";
-      case "official":
-        return "text-blue-600";
-      case "test":
-        return "text-green-600";
-      case "diplomatic":
-        return "text-yellow-600";
-      case "collection":
-        return "text-gray-400";
-      default:
-        return "text-black";
-    }
-  };
 
   const handleDeleteUnit = (id: string) => {
     onDeleteUnit(id);
