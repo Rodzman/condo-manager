@@ -15,7 +15,7 @@ export const invoiceRouter = createTRPCRouter({
 
             // If user is a resident, only show their invoices
             if (ctx.session.user.role === 'resident') {
-                const units = await ctx.prisma.unit.findMany({
+                const units = await ctx.db.unit.findMany({
                     where: { ownerId: ctx.session.user.id },
                     select: { id: true },
                 });
@@ -33,7 +33,7 @@ export const invoiceRouter = createTRPCRouter({
                 filters.isPaid = input.isPaid;
             }
 
-            return ctx.prisma.invoice.findMany({
+            return ctx.db.invoice.findMany({
                 where: filters,
                 include: {
                     unit: {
@@ -68,7 +68,7 @@ export const invoiceRouter = createTRPCRouter({
         )
         .mutation(async ({ ctx, input }) => {
             // Validate unit exists
-            const unit = await ctx.prisma.unit.findUnique({
+            const unit = await ctx.db.unit.findUnique({
                 where: { id: input.unitId },
             });
 
@@ -79,7 +79,7 @@ export const invoiceRouter = createTRPCRouter({
                 });
             }
 
-            return ctx.prisma.invoice.create({
+            return ctx.db.invoice.create({
                 data: {
                     unitId: input.unitId,
                     amount: input.amount,
