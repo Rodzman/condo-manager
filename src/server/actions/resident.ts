@@ -1,5 +1,6 @@
 import { db } from "@/server/db";
 import type { Resident, Vehicle } from "@prisma/client";
+import { throwError, ErrorType } from "@/lib/error-handler";
 
 export type ResidentWithVehicles = Resident & {
     vehicles: Vehicle[];
@@ -16,8 +17,7 @@ export async function getResidents(): Promise<ResidentWithVehicles[]> {
         });
         return residents;
     } catch (error) {
-        console.error("Failed to fetch residents:", error);
-        throw new Error("Failed to fetch residents");
+        throwError("Failed to fetch residents", ErrorType.INTERNAL, { error });
     }
 }
 
@@ -38,8 +38,7 @@ export async function createResident(
         });
         return newResident;
     } catch (error) {
-        console.error("Failed to create resident:", error);
-        throw new Error("Failed to create resident");
+        throwError("Failed to create resident", ErrorType.INTERNAL, { error });
     }
 }
 
@@ -59,8 +58,7 @@ export async function updateResident(
         });
         return updatedResident;
     } catch (error) {
-        console.error("Failed to update resident:", error);
-        throw new Error("Failed to update resident");
+        throwError("Failed to update resident", ErrorType.INTERNAL, { error });
     }
 }
 
@@ -76,7 +74,6 @@ export async function deleteResident(id: string): Promise<ResidentWithVehicles> 
         });
         return deletedResident;
     } catch (error) {
-        console.error("Failed to delete resident:", error);
-        throw new Error("Failed to delete resident");
+        throwError("Failed to delete resident", ErrorType.INTERNAL, { error });
     }
 }

@@ -1,5 +1,6 @@
 import { db } from "@/server/db";
 import type { Unit, Resident, Vehicle } from "@prisma/client";
+import { throwError, ErrorType } from "@/lib/error-handler";
 
 export type UnitWithRelations = Unit & {
     residents: (Resident & {
@@ -22,8 +23,7 @@ export async function getUnits(): Promise<UnitWithRelations[]> {
         });
         return units;
     } catch (error) {
-        console.error("Failed to fetch units:", error);
-        throw new Error("Failed to fetch units");
+        throwError("Failed to fetch units", ErrorType.INTERNAL, { error });
     }
 }
 
@@ -46,8 +46,7 @@ export async function createUnit(data: Omit<Unit, "id" | "createdAt" | "updatedA
         });
         return newUnit;
     } catch (error) {
-        console.error("Failed to create unit:", error);
-        throw new Error("Failed to create unit");
+        throwError("Failed to create unit", ErrorType.INTERNAL, { error });
     }
 }
 
@@ -71,8 +70,7 @@ export async function updateUnit(
         });
         return updatedUnit;
     } catch (error) {
-        console.error("Failed to update unit:", error);
-        throw new Error("Failed to update unit");
+        throwError("Failed to update unit", ErrorType.INTERNAL, { error });
     }
 }
 
@@ -92,7 +90,6 @@ export async function deleteUnit(id: string): Promise<UnitWithRelations> {
         });
         return deletedUnit;
     } catch (error) {
-        console.error("Failed to delete unit:", error);
-        throw new Error("Failed to delete unit");
+        throwError("Failed to delete unit", ErrorType.INTERNAL, { error });
     }
 }

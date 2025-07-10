@@ -1,5 +1,6 @@
 import { db } from "@/server/db";
 import type { Vehicle } from "@prisma/client";
+import { throwError, ErrorType } from "@/lib/error-handler";
 
 export async function getVehicles(): Promise<Vehicle[]> {
     'use server'
@@ -8,8 +9,7 @@ export async function getVehicles(): Promise<Vehicle[]> {
         const vehicles = await db.vehicle.findMany();
         return vehicles;
     } catch (error) {
-        console.error("Failed to fetch vehicles:", error);
-        throw new Error("Failed to fetch vehicles");
+        throwError("Failed to fetch vehicles", ErrorType.INTERNAL, { error });
     }
 }
 
@@ -24,8 +24,7 @@ export async function createVehicle(
         });
         return newVehicle;
     } catch (error) {
-        console.error("Failed to create vehicle:", error);
-        throw new Error("Failed to create vehicle");
+        throwError("Failed to create vehicle", ErrorType.INTERNAL, { error });
     }
 }
 
@@ -42,8 +41,7 @@ export async function updateVehicle(
         });
         return updatedVehicle;
     } catch (error) {
-        console.error("Failed to update vehicle:", error);
-        throw new Error("Failed to update vehicle");
+        throwError("Failed to update vehicle", ErrorType.INTERNAL, { error });
     }
 }
 
@@ -56,7 +54,6 @@ export async function deleteVehicle(id: string): Promise<Vehicle> {
         });
         return deletedVehicle;
     } catch (error) {
-        console.error("Failed to delete vehicle:", error);
-        throw new Error("Failed to delete vehicle");
+        throwError("Failed to delete vehicle", ErrorType.INTERNAL, { error });
     }
 }
