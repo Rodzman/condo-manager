@@ -6,6 +6,11 @@ export type ResidentWithVehicles = Resident & {
     vehicles: Vehicle[];
 };
 
+/**
+ * Retrieves all residents along with their associated vehicles from the database.
+ *
+ * @returns An array of residents, each including their related vehicles.
+ */
 export async function getResidents(): Promise<ResidentWithVehicles[]> {
     'use server'
 
@@ -21,6 +26,12 @@ export async function getResidents(): Promise<ResidentWithVehicles[]> {
     }
 }
 
+/**
+ * Creates a new resident record in the database with the specified data and initializes it with no vehicles.
+ *
+ * @param data - The resident information to create, excluding id, createdAt, and updatedAt fields
+ * @returns The newly created resident along with an empty array of associated vehicles
+ */
 export async function createResident(
     data: Omit<Resident, "id" | "createdAt" | "updatedAt">
 ): Promise<ResidentWithVehicles> {
@@ -42,6 +53,13 @@ export async function createResident(
     }
 }
 
+/**
+ * Updates an existing resident with the specified data and returns the updated resident along with their vehicles.
+ *
+ * @param id - The unique identifier of the resident to update
+ * @param data - Partial resident data to update (excluding id, createdAt, and updatedAt)
+ * @returns The updated resident object including associated vehicles
+ */
 export async function updateResident(
     id: string,
     data: Partial<Omit<Resident, "id" | "createdAt" | "updatedAt">>
@@ -62,6 +80,12 @@ export async function updateResident(
     }
 }
 
+/**
+ * Deletes a resident by ID and returns the deleted resident along with their associated vehicles.
+ *
+ * @param id - The unique identifier of the resident to delete
+ * @returns The deleted resident and their vehicles
+ */
 export async function deleteResident(id: string): Promise<ResidentWithVehicles> {
     'use server'
 

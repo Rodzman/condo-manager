@@ -31,6 +31,15 @@ interface UserManagementTableProps {
   users: User[];
 }
 
+/**
+ * Displays an interactive, searchable table for managing user accounts.
+ *
+ * Allows filtering users by name, email, or role, and provides actions to change user roles or view user details. Updates to user roles are handled asynchronously with immediate UI feedback.
+ *
+ * @param users - The initial list of users to display and manage
+ *
+ * @returns A React component rendering the user management table UI
+ */
 export default function UserManagementTable({
   users,
 }: UserManagementTableProps) {
