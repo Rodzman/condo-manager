@@ -15,6 +15,11 @@ type VehicleFormProps = {
   vehicle?: Vehicle;
 };
 
+/**
+ * Renders a form for creating or editing vehicle information, including vehicle type, license plate, and model.
+ *
+ * The form supports validation for Mercosul license plate format and displays dynamic styling based on the selected vehicle type. On submission, it invokes the provided callback with the form data. If editing an existing vehicle, fields are prefilled; otherwise, the form resets after successful submission. An optional cancel button is shown if a cancel handler is provided.
+ */
 export default function VehicleForm({
   onSubmit,
   onCancel,
