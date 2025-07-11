@@ -3,6 +3,7 @@ import { createTRPCRouter, publicProcedure, protectedProcedure } from "@/server/
 import { RegisterSchema } from "@/schemas/registerSchema";
 import bcrypt from "bcryptjs";
 import { TRPCError } from "@trpc/server";
+import { handleTRPCError } from "@/lib/error-handler";
 import { ROLES, type Role, hasRolePermission } from "@/constants/roles";
 
 // Define a zod enum for role validation
@@ -134,11 +135,7 @@ export const userRouter = createTRPCRouter({
 
                 return updatedUser;
             } catch (error) {
-                console.error("Error updating user role:", error);
-                throw new TRPCError({
-                    code: "INTERNAL_SERVER_ERROR",
-                    message: "Failed to update user role",
-                });
+                throw handleTRPCError(error);
             }
         }),
 });
